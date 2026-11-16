@@ -23,8 +23,11 @@ jobs:
       matrix:
         include:
           - arch: x64
+            # baseline runs on every x86-64 CPU, not only Haswell (2013) and newer.
+            target: bun-linux-x64-baseline
             runner: ubuntu-22.04
           - arch: arm64
+            target: bun-linux-arm64
             runner: ubuntu-22.04-arm
     runs-on: ${{ matrix.runner }}
     steps:
@@ -40,7 +43,7 @@ jobs:
       - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends libgtk-3-dev libjson-glib-dev
       - run: bun install --frozen-lockfile
       - run: bun run check
-      - run: bun run build:bin --target=bun-linux-${{ matrix.arch }}
+      - run: bun run build:bin --target=${{ matrix.target }}
       - run: bun run build:font
       - run: bun run build:widget
       - run: bun run build:cffi
