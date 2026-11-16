@@ -17,6 +17,7 @@ const OWN_ADAPTER_RESERVE_MS = 300;
  *           no login either, the reason T3 gave nothing stands in for "signed out", so a reading
  *           T3 brought earlier stays on the bar, dimmed, with "open T3 Code".
  *
+ * A row with neither a T3 driver nor an adapter only lends its logo, and is never fetched.
  * Every provider fetched in one run shares one T3 read, so a poll sends one `server.getConfig`.
  */
 export function sourcedProviders(setting: SourceSetting, run: Run, rows: readonly Listed[] = registered): readonly Adapter[] {
@@ -28,7 +29,7 @@ export function sourcedProviders(setting: SourceSetting, run: Run, rows: readonl
     return shared;
   };
   return rows.flatMap((row) => {
-    if (row.t3Driver === null && setting === "t3") return [];
+    if (row.t3Driver === null && (setting === "t3" || row.fetch === null)) return [];
     const { fetch: own, ...provider } = row;
     const { t3Driver } = row;
     const fetch = async (ctx: FetchContext): Promise<FetchResult> => {

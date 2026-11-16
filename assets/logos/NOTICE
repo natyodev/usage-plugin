@@ -1,10 +1,47 @@
-claude.svg, grok.svg, codex.svg, cursor.svg, antigravity.svg and muse.svg are copied unchanged from @lobehub/icons-static-svg 1.102.0
-(https://github.com/lobehub/lobe-icons), under the MIT License below.
-The logos remain trademarks of their owners.
+amp.svg, anthropic.svg, antigravity.svg, azure-openai.svg, baichuan.svg, bedrock.svg, cerebras.svg,
+claude.svg, cline.svg, codex.svg, cohere.svg, cursor.svg, deepseek.svg, doubao.svg, fireworks.svg,
+gemini.svg, github-copilot.svg, grok.svg, groq.svg, huggingface.svg, hunyuan.svg, kilo-code.svg,
+kimi.svg, kiro.svg, lmstudio.svg, meta.svg, minimax.svg, mistral.svg, muse.svg, ollama.svg,
+openai.svg, opencode.svg, openrouter.svg, perplexity.svg, pi.svg, qoder.svg, qwen.svg,
+replicate.svg, roo-code.svg, together.svg, trae.svg, vertex-ai.svg, windsurf.svg, xai.svg, zai.svg
+and zhipu.svg are copied from @lobehub/icons-static-svg 1.102.0
+(https://github.com/lobehub/lobe-icons), under the MIT License below. Each is the plain monochrome
+icon, unchanged except that it is renamed to the provider's id here (githubcopilot.svg is
+github-copilot.svg, vertexai.svg is vertex-ai.svg, azure.svg is azure-openai.svg, roocode.svg is
+roo-code.svg, kilocode.svg is kilo-code.svg). The logos remain trademarks of their owners.
 
 MIT License
 
 Copyright (c) 2023 LobeHub
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+fx.svg and acp-registry.svg are drawn from the icon paths of the fx and ACP Registry providers in T3
+Code 0.1.9 (https://github.com/pingdotgg/t3code), under the MIT License below, with the colour set
+to currentColor and the view box moved to a square at the origin. LobeHub has no icon for either.
+The logos remain trademarks of their owners.
+
+MIT License
+
+Copyright (c) 2026 T3 Tools Inc.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

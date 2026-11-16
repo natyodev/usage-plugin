@@ -42,6 +42,7 @@ Hover the module for every window and when it resets.
 - [Styling the module](#styling-the-module)
 - [Troubleshooting](#troubleshooting)
 - [Privacy and security](#privacy-and-security)
+- [Providers](#providers)
 - [Add a provider](#add-a-provider)
 - [Uninstall](#uninstall)
 - [License](#license)
@@ -169,7 +170,7 @@ If the installer could not build the hover module, use a plain custom module. A 
 
 ### One module per provider
 
-To put each provider in its own place, add a custom module per provider with `--provider <id>`. The ids are `claude`, `grok`, `codex`, `cursor`, `antigravity` and `muse`. All of them share one cache, so splitting adds no requests. See [`examples/split.jsonc`](examples/split.jsonc).
+To put each provider in its own place, add a custom module per provider with `--provider <id>`. The id is the one in [Providers](#providers), such as `claude`, `codex` or `opencode`. All of them share one cache, so splitting adds no requests. See [`examples/split.jsonc`](examples/split.jsonc).
 
 ```jsonc
 "custom/usage-claude": {
@@ -189,7 +190,7 @@ You choose with `source` in [the config file](#configuration).
 
 ### Connect to T3 Code (`"source": "auto"`, the default)
 
-While T3 Code runs, the plugin asks T3's local server for the usage limits T3 already tracks. You need no other login, and you get every provider T3 shows, including Codex, Cursor, Antigravity and Muse. The numbers match T3's own usage panel. The tooltip and the widget say `via T3 Code`.
+While T3 Code runs, the plugin asks T3's local server for the usage limits T3 already tracks. You need no other login, and you get every provider T3 shows: Claude, Codex, Cursor, Grok, Antigravity, Muse, OpenCode, Pi, Kiro, fx and ACP Registry agents. The numbers match T3's own usage panel. The tooltip and the widget say `via T3 Code`.
 
 When T3 Code is closed, Claude and Grok fall back to your CLI logins, if you have them, and say `direct`. A provider with no fallback keeps its last reading, dimmed with `~`, and the tooltip says to open T3 Code. The plugin needs the `t3` command on your `PATH` or at `~/.local/bin/t3` to sign in to T3's server.
 
@@ -311,6 +312,63 @@ The cache, the log and the T3 token live in `$XDG_RUNTIME_DIR/usage-plugin/`, wh
 - **Nothing is written to T3 Code or your CLIs.** The plugin writes nothing under `~/.t3/userdata/`, `~/.config/t3code-v2/`, `~/.claude/` or `~/.grok/`. It reads T3's theme from its settings files and never changes them.
 - **Requests.** In `direct` mode, the plugin calls Claude's and Grok's usage endpoints, with the token in a header and never in the URL. Grok's endpoint is the one its CLI's `/usage` uses, and it is undocumented, so a change there shows Grok as broken, never as a wrong number.
 
+## Providers
+
+Every provider has its logo in the bundled icon font, so one shows the moment any source reports it. Code points never move, so a theme or a split module that names one keeps working.
+
+| Id | Name | Code point | T3 Code driver |
+| --- | --- | --- | --- |
+| `claude` | Claude | U+E900 | `claudeAgent` |
+| `grok` | Grok | U+E901 | `grok` |
+| `codex` | Codex | U+E902 | `codex` |
+| `gemini` | Gemini | U+E903 |  |
+| `cursor` | Cursor | U+E904 | `cursor` |
+| `antigravity` | Antigravity | U+E905 | `antigravity` |
+| `muse` | Muse | U+E906 | `muse` |
+| `opencode` | OpenCode | U+E907 | `opencode` |
+| `pi` | Pi | U+E908 | `pi` |
+| `kiro` | Kiro | U+E909 | `kiro` |
+| `fx` | fx | U+E90A | `fx` |
+| `acp-registry` | ACP Registry | U+E90B | `acpRegistry` |
+| `github-copilot` | GitHub Copilot | U+E90C |  |
+| `windsurf` | Windsurf | U+E90D |  |
+| `amp` | Amp | U+E90E |  |
+| `cline` | Cline | U+E90F |  |
+| `roo-code` | Roo Code | U+E910 |  |
+| `kilo-code` | Kilo Code | U+E911 |  |
+| `trae` | Trae | U+E912 |  |
+| `qoder` | Qoder | U+E913 |  |
+| `openai` | OpenAI | U+E914 |  |
+| `anthropic` | Anthropic | U+E915 |  |
+| `xai` | xAI | U+E916 |  |
+| `deepseek` | DeepSeek | U+E917 |  |
+| `mistral` | Mistral | U+E918 |  |
+| `qwen` | Qwen | U+E919 |  |
+| `kimi` | Kimi | U+E91A |  |
+| `zhipu` | Zhipu | U+E91B |  |
+| `zai` | Z.ai | U+E91C |  |
+| `minimax` | MiniMax | U+E91D |  |
+| `perplexity` | Perplexity | U+E91E |  |
+| `openrouter` | OpenRouter | U+E91F |  |
+| `groq` | Groq | U+E920 |  |
+| `cerebras` | Cerebras | U+E921 |  |
+| `together` | Together AI | U+E922 |  |
+| `fireworks` | Fireworks AI | U+E923 |  |
+| `replicate` | Replicate | U+E924 |  |
+| `huggingface` | Hugging Face | U+E925 |  |
+| `vertex-ai` | Vertex AI | U+E926 |  |
+| `azure-openai` | Azure OpenAI | U+E927 |  |
+| `bedrock` | Bedrock | U+E928 |  |
+| `meta` | Meta | U+E929 |  |
+| `cohere` | Cohere | U+E92A |  |
+| `ollama` | Ollama | U+E92B |  |
+| `lmstudio` | LM Studio | U+E92C |  |
+| `baichuan` | Baichuan | U+E92D |  |
+| `doubao` | Doubao | U+E92E |  |
+| `hunyuan` | Hunyuan | U+E92F |  |
+
+Claude and Grok also have an adapter of their own for `"source": "direct"`. The others are read through T3 Code, or are logos waiting for an adapter.
+
 ## Add a provider
 
 A provider that T3 Code reports needs only a logo and a registry row. Reading it without T3 needs one adapter file as well.
@@ -319,7 +377,7 @@ A provider that T3 Code reports needs only a logo and a registry row. Reading it
 2. Add a row to the table in `src/providers/index.ts`. Take the next free glyph and never reuse one:
 
    ```ts
-   example: { glyph: 0xe907, name: "Example", loginCommand: "example", t3Driver: "example", fetch: fetchExample },
+   example: { glyph: 0xe930, name: "Example", loginCommand: "example", t3Driver: "example", fetch: fetchExample },
    ```
 
    `t3Driver` is the driver name T3 Code reports, or `null`. Leave out `fetch` for a provider read only through T3.
@@ -345,6 +403,6 @@ Then remove the module from your Waybar config and reload Waybar. If you used T3
 
 ## License
 
-MIT. See [LICENSE](LICENSE). The provider logos come from [LobeHub Icons](https://github.com/lobehub/lobe-icons) under MIT, as recorded in [`assets/logos/NOTICE`](assets/logos/NOTICE), and remain trademarks of their owners.
+MIT. See [LICENSE](LICENSE). The provider logos come from [LobeHub Icons](https://github.com/lobehub/lobe-icons) under MIT, and the fx and ACP Registry logos from [T3 Code](https://github.com/pingdotgg/t3code) under MIT, as recorded in [`assets/logos/NOTICE`](assets/logos/NOTICE), and remain trademarks of their owners.
 
 Built with [T3 Code](https://t3.codes).

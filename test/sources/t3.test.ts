@@ -10,7 +10,7 @@ import { moduleLine } from "../../src/render/module.ts";
 import { sourcedProviders } from "../../src/sources/index.ts";
 import { isSupported, limitsByDriver, readT3 } from "../../src/sources/t3.ts";
 import type { T3Event } from "../../src/sources/t3.ts";
-import { deadlineFromNow, fixtureCase, requestsIn, T0, tempDir, testRun, window, writeFileUnder } from "../support.ts";
+import { deadlineFromNow, fixtureCase, requestsIn, T0, T3_DRIVERS, tempDir, testRun, window, writeFileUnder } from "../support.ts";
 import type { TestRun } from "../support.ts";
 
 const CLAUDE = "claude" as ProviderId;
@@ -73,6 +73,27 @@ describe("a full T3 Code reply", () => {
     if (read.kind === "answered") expect([...read.byDriver.keys()]).toEqual(["claudeAgent", "grok", "codex", "someday-driver"]);
     const ids = providers.map((provider) => provider.t3Driver);
     expect(ids).not.toContain("someday-driver");
+  });
+
+  test("shows every driver T3 Code ships with its own logo, and still ignores one the registry does not know", async () => {
+    const dir = join(tempDir(), "t3-every-driver");
+    cpSync(fixtureCase("t3-ok"), dir, { recursive: true });
+    const usageLimits = { windows: [{ label: "Weekly", usedPercent: 10, resetsAt: "@now+3600" }] };
+    const reported = [...T3_DRIVERS, "someday-driver"].map((driver) => ({ instanceId: driver, driver, usageLimits }));
+    writeFileSync(join(dir, "t3.json"), JSON.stringify({ config: { providers: reported } }));
+    const output = await line(testRun({ fixtures: dir }));
+    for (const driver of T3_DRIVERS) {
+      const provider = providers.find((candidate) => candidate.t3Driver === driver);
+      expect(output.class, driver).toContain(provider?.id);
+      expect(output.text, driver).toContain(String.fromCodePoint(provider?.glyph ?? 0));
+    }
+    expect(output.class.filter((name: string) => providers.some((provider) => provider.id === name))).toHaveLength(T3_DRIVERS.length);
+  });
+
+  test("never fetches a provider that has neither a T3 driver nor an adapter", () => {
+    const ids = sourcedProviders("auto", runFor("t3-ok")).map((adapter): string => adapter.id);
+    expect(ids).toContain("claude");
+    expect(ids).not.toContain("openai");
   });
 
   test("is read once per run, however many providers are due", async () => {

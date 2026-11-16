@@ -25,10 +25,10 @@ describe("loadConfig", () => {
 
   test("accepts every logo in the registry, with an adapter or reserved, and no other id", () => {
     const home = tempDir();
-    writeFileUnder(home, CONFIG_UNDER_HOME, '{ "providers": { "grok": false, "codex": false, "openai": false } }');
+    writeFileUnder(home, CONFIG_UNDER_HOME, '{ "providers": { "grok": false, "codex": false, "nope": false } }');
     const { settings, problems } = loadConfig(join(home, CONFIG_UNDER_HOME));
     expect(settings.disabled).toEqual(new Set(["grok", "codex"]));
-    expect(problems).toEqual([{ line: 1, message: expect.stringContaining("providers.openai names no provider") }]);
+    expect(problems).toEqual([{ line: 1, message: expect.stringContaining("providers.nope names no provider") }]);
   });
 
   test("with a directory where the file should be gives the defaults and one problem with no line", () => {
