@@ -4,6 +4,15 @@ on:
   push:
     tags: ["v*"]
   workflow_dispatch:
+  pull_request:
+    paths:
+      - .github/workflows/release.yml
+      - npm/**
+      - scripts/pack-npm.ts
+      - scripts/smoke-npm.sh
+      - install.sh
+      - package.json
+      - cffi/**
 
 permissions:
   contents: read
