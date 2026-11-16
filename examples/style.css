@@ -18,7 +18,7 @@
 #cffi-usage.warning { color: #e0a854; }
 #cffi-usage.critical { color: #d9774b; }
 
-/* Per provider, when it is shown: .claude, .grok, .codex, .cursor, .antigravity, .muse,
+/* Per provider, when it is shown, by its id from the README: .claude, .grok, .codex, .opencode, ...
    and per provider level: .claude-ok, .claude-warning, .claude-critical. */
 #cffi-usage.grok-critical { border-bottom: 2px solid #d9774b; }
 

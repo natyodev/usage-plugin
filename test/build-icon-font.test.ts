@@ -133,6 +133,12 @@ describe("buildFont", () => {
     expect(font.outlineAt(0xe900).equals(font.outlineAt(0xe901))).toBe(false);
   });
 
+  test("maps every glyph of the registry to an outline", async () => {
+    const font = readFont(await buildFont(plannedGlyphs()));
+    expect(font.codePoints).toEqual(logos.map((logo) => logo.glyph).sort((a, b) => a - b));
+    expect(font.emptyGlyphCodePoints).toEqual([]);
+  });
+
   test("names the font family the module's markup asks for", async () => {
     expect(readFont(await buildFont(plannedGlyphs())).family).toBe(ICON_FONT_FAMILY);
     expect(ICON_FONT_FAMILY).toBe("usage-plugin-icons");

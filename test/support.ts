@@ -136,3 +136,18 @@ export async function until(condition: () => boolean, what: string): Promise<voi
     await Bun.sleep(1);
   }
 }
+
+/** `BUILT_IN_DRIVERS` of T3 Code 0.1.9, read from apps/server/dist in its app.asar. */
+export const T3_DRIVERS = [
+  "codex",
+  "claudeAgent",
+  "cursor",
+  "grok",
+  "fx",
+  "opencode",
+  "antigravity",
+  "kiro",
+  "pi",
+  "muse",
+  "acpRegistry",
+] as const;
