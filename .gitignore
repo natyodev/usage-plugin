@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.audit/
+
+# Internal planning and agent notes, kept locally only
+/PLAN.md
+/GLOSSARY.md
+/docs/adr/
+/.claude/
+/docs/review/
+/docs/prototype/

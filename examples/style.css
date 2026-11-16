@@ -1,0 +1,27 @@
+/* Add to your Waybar style.css. Colours here are examples; use your own @define-color names. */
+
+/* The module box. min-width and margin keep a vertical bar's logos centred. */
+#cffi-usage,
+#custom-usage-claude,
+#custom-usage-grok {
+  min-width: 42px;
+  margin: 3px 7px;
+  padding: 7px 0;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.06);
+}
+#cffi-usage:hover { background: rgba(255, 255, 255, 0.12); }
+
+/* Levels of the tightest window: ok, warning (25% left by default) and critical (10% left). */
+#cffi-usage.warning { color: #e0a854; }
+#cffi-usage.critical { color: #d9774b; }
+
+/* Per provider, when it is shown: .claude, .grok, .codex, .cursor, .antigravity, .muse,
+   and per provider level: .claude-ok, .claude-warning, .claude-critical. */
+#cffi-usage.grok-critical { border-bottom: 2px solid #d9774b; }
+
+/* States: .stale (~ before the percent), .waiting (–), .expired (?), .broken (!).
+   .t3-closed shows when T3 Code is closed and nothing else can be read. */
+#cffi-usage.t3-closed { opacity: 0.5; }

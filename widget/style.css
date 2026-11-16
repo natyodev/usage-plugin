@@ -1,0 +1,162 @@
+/*
+ * Every colour goes through a --usage-* property, so a theme only needs to set those. The named
+ * colours are defaults: a Waybar colors.css that defines the same names replaces them, and
+ * ~/.config/usage-plugin/style.css can override any rule here.
+ */
+@define-color background #0b1612;
+@define-color surface_container #172a22;
+@define-color on_background #d6e6cf;
+@define-color muted #6f8a73;
+@define-color primary #a2c56e;
+@define-color amber #e0a854;
+@define-color rust #d9774b;
+
+window.usage-plugin {
+  --usage-background: @background;
+  --usage-card: @surface_container;
+  --usage-text: @on_background;
+  --usage-muted: @muted;
+  --usage-accent: @on_background;
+  --usage-ok: @primary;
+  --usage-warning: @amber;
+  --usage-critical: @rust;
+  --usage-broken: #e5484d;
+  background: transparent;
+}
+
+/* Not transparent: GTK commits no buffer for a window that draws nothing, so it would never map. */
+window.usage-plugin-backdrop {
+  background: alpha(black, 0.004);
+}
+
+.panel {
+  min-width: 320px;
+  padding: 18px;
+  border-radius: 22px;
+  border: 1px solid alpha(var(--usage-text), 0.07);
+  background: alpha(var(--usage-background), 0.98);
+  font-family: "Inter", "JetBrainsMono Nerd Font", sans-serif;
+}
+
+.header {
+  color: var(--usage-muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.updated,
+.resets,
+.source,
+.note {
+  color: var(--usage-muted);
+  font-size: 11px;
+}
+
+.notice {
+  color: var(--usage-warning);
+  font-size: 11px;
+}
+
+.card {
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: alpha(var(--usage-card), 0.85);
+}
+
+.logo {
+  font-family: "usage-plugin-icons";
+  font-size: 20px;
+  color: var(--usage-logo, var(--usage-accent));
+}
+
+.name {
+  color: var(--usage-text);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.plan {
+  color: var(--usage-muted);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.headline {
+  color: var(--usage-text);
+  font-size: 26px;
+  font-weight: 800;
+  font-feature-settings: "tnum";
+}
+
+.window {
+  color: alpha(var(--usage-text), 0.8);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.percent {
+  color: var(--usage-text);
+  font-size: 12px;
+  font-weight: 700;
+  font-feature-settings: "tnum";
+}
+
+.chip {
+  padding: 2px 8px;
+  border-radius: 99px;
+  background: alpha(var(--usage-text), 0.06);
+  color: alpha(var(--usage-text), 0.75);
+  font-size: 10.5px;
+  font-weight: 600;
+}
+
+progressbar trough {
+  min-height: 4px;
+  border: none;
+  border-radius: 99px;
+  background: alpha(var(--usage-text), 0.08);
+}
+
+progressbar progress {
+  min-height: 4px;
+  border: none;
+  border-radius: 99px;
+  background: var(--usage-ok);
+}
+
+.headline.warning,
+.percent.warning {
+  color: var(--usage-warning);
+}
+
+.headline.critical,
+.percent.critical {
+  color: var(--usage-critical);
+}
+
+progressbar.warning progress {
+  background: var(--usage-warning);
+}
+
+progressbar.critical progress {
+  background: var(--usage-critical);
+}
+
+.card.stale .reading {
+  opacity: 0.5;
+}
+
+.card.waiting .headline {
+  color: var(--usage-muted);
+}
+
+.card.expired .logo {
+  opacity: 0.5;
+}
+
+.card.broken .headline {
+  color: var(--usage-broken);
+}

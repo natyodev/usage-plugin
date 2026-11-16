@@ -1,0 +1,22 @@
+// One module per provider, so each can sit in its own place on the bar.
+// Split modules are custom modules: a click opens the widget, and there is no hover.
+// Use "--layout inline" on a horizontal bar.
+{
+  "modules-left": ["custom/usage-claude"],
+  "modules-right": ["custom/usage-grok", "clock"],
+
+  "custom/usage-claude": {
+    "exec": "~/.local/bin/usage-plugin module --provider claude --layout stacked",
+    "return-type": "json",
+    "interval": 30,
+    "justify": "center",
+    "on-click": "~/.local/bin/usage-plugin widget --toggle"
+  },
+  "custom/usage-grok": {
+    "exec": "~/.local/bin/usage-plugin module --provider grok --layout stacked",
+    "return-type": "json",
+    "interval": 30,
+    "justify": "center",
+    "on-click": "~/.local/bin/usage-plugin widget --toggle"
+  }
+}

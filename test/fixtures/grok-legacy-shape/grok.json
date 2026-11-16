@@ -1,0 +1,20 @@
+{
+  "status": 200,
+  "headers": {
+    "content-type": "application/json"
+  },
+  "body": {
+    "config": {
+      "monthlyLimit": {
+        "val": 0
+      },
+      "used": {
+        "val": 0
+      },
+      "onDemandCap": {
+        "val": 0
+      },
+      "history": []
+    }
+  }
+}

@@ -1,0 +1,13 @@
+// A left or right bar. Merge these keys into your own Waybar config.
+// Replace /home/YOU with your home: install.sh prints this block with your real paths.
+{
+  "modules-left": ["clock", "cffi/usage"],
+
+  "cffi/usage": {
+    "module_path": "/home/YOU/.local/share/usage-plugin/usage-plugin-cffi.so",
+    "exec": "/home/YOU/.local/bin/usage-plugin",
+    "layout": "stacked",
+    "interval": 30,
+    "tooltip": false
+  }
+}

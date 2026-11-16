@@ -1,0 +1,16 @@
+{
+  "status": 200,
+  "headers": {
+    "content-type": "application/json"
+  },
+  "body": {
+    "five_hour": {
+      "utilization": 66,
+      "resets_at": "@now+1410"
+    },
+    "seven_day": {
+      "utilization": 12,
+      "resets_at": "@now+282600"
+    }
+  }
+}

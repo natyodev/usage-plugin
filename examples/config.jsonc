@@ -1,0 +1,27 @@
+// ~/.config/usage-plugin/config.jsonc. Every key is optional; these are the defaults.
+{
+  // "auto" reads T3 Code while it runs and your CLI logins otherwise,
+  // "t3" reads only T3 Code, "direct" reads only CLI logins.
+  "source": "auto",
+
+  // "t3" follows your T3 Code theme, "waybar" uses Waybar's colors.css, "none" leaves colour to your CSS.
+  "theme": "t3",
+
+  // false keeps every logo and percent in the bar in your bar's own CSS colour. The widget keeps its colours.
+  "barColors": true,
+
+  // Turn a provider off.
+  "providers": { "codex": true },
+
+  // Paint one provider's logo, over the theme.
+  "colors": { "claude": "#D97757" },
+
+  // Percent used at which a window turns warning and critical.
+  "thresholds": { "warning": 75, "critical": 90 },
+
+  // Seconds between readings, from 60 to 3600.
+  "pollIntervalSeconds": 60,
+
+  // One desktop notification when a window reaches critical.
+  "notifications": true
+}

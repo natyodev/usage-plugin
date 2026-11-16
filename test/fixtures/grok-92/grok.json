@@ -1,0 +1,33 @@
+{
+  "status": 200,
+  "headers": {
+    "content-type": "application/json"
+  },
+  "body": {
+    "config": {
+      "currentPeriod": {
+        "type": "USAGE_PERIOD_TYPE_WEEKLY",
+        "start": "@now-372305",
+        "end": "@now+232495"
+      },
+      "creditUsagePercent": 92.0,
+      "productUsage": [
+        {
+          "product": "GrokBot",
+          "usagePercent": 58.0
+        },
+        {
+          "product": "GrokBuild",
+          "usagePercent": 34.0
+        }
+      ],
+      "isUnifiedBillingUser": true,
+      "prepaidBalance": {
+        "val": 0
+      },
+      "topUpMethod": "TOP_UP_METHOD_SAVED_PAYMENT_METHOD",
+      "billingPeriodStart": "@now-372305",
+      "billingPeriodEnd": "@now+232495"
+    }
+  }
+}

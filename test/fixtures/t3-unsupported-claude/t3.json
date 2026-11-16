@@ -1,0 +1,46 @@
+{
+  "config": {
+    "providers": [
+      {
+        "instanceId": "claudeAgent",
+        "driver": "claudeAgent",
+        "enabled": true,
+        "installed": true,
+        "status": "ready",
+        "auth": {
+          "status": "authenticated"
+        },
+        "usageLimits": {
+          "checkedAt": "@now-120",
+          "windows": [],
+          "unavailable": {
+            "reason": "unsupported"
+          }
+        }
+      },
+      {
+        "instanceId": "grok",
+        "driver": "grok",
+        "enabled": true,
+        "installed": true,
+        "status": "ready",
+        "auth": {
+          "status": "authenticated"
+        },
+        "usageLimits": {
+          "checkedAt": "@now-120",
+          "windows": [
+            {
+              "id": "weekly",
+              "kind": "weekly",
+              "label": "Weekly",
+              "usedPercent": 1,
+              "resetsAt": "@now+232495",
+              "windowDurationMins": 10080
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

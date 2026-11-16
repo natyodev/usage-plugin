@@ -1,0 +1,45 @@
+{
+  "config": {
+    "providers": [
+      {
+        "instanceId": "claudeAgent",
+        "driver": "claudeAgent",
+        "enabled": true,
+        "installed": true,
+        "status": "ready",
+        "auth": {
+          "status": "authenticated"
+        },
+        "usageLimits": {
+          "checkedAt": "@now-120",
+          "windows": [
+            {
+              "id": "five_hour",
+              "kind": "session",
+              "label": "Session",
+              "usedPercent": 46,
+              "resetsAt": "@now+1410",
+              "windowDurationMins": 300
+            },
+            {
+              "id": "seven_day",
+              "kind": "weekly",
+              "label": "Weekly",
+              "usedPercent": 34,
+              "resetsAt": "@now+282600",
+              "windowDurationMins": 10080
+            },
+            {
+              "id": "seven_day_fable",
+              "kind": "weekly",
+              "label": "Weekly Fable",
+              "usedPercent": 26,
+              "resetsAt": "@now+282600",
+              "windowDurationMins": 10080
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
