@@ -22,6 +22,7 @@ const size_t wbcffi_version = 2;
 /* Waybar names `custom/usage` #custom-usage, so `cffi/usage` is #cffi-usage. */
 #define CSS_NAME "cffi-usage"
 #define MODULE_CLASS "module"
+#define ICON_FONT_FAMILY "usage-plugin-icons"
 
 typedef struct {
   char* exec;
@@ -40,6 +41,8 @@ typedef struct {
   GtkWidget* box;
   GtkWidget* lines;
   PangoLayout* layout;
+  /* The attributes the module line asked for, before centre_logos adds its rises. */
+  PangoAttrList* attributes;
   char* tooltip;
   /* The classes the last module line set, which the next line replaces. */
   char** classes;
@@ -99,6 +102,48 @@ static void read_config(Config* config, const wbcffi_config_entry* entries, size
   config->tooltip = holds(tooltip, G_TYPE_BOOLEAN) ? json_node_get_boolean(tooltip) : TRUE;
 }
 
+static gboolean is_logo(PangoGlyphItem* run) {
+  g_autoptr(PangoFontDescription) font = pango_font_describe(run->item->analysis.font);
+  return g_strcmp0(pango_font_description_get_family(font), ICON_FONT_FAMILY) == 0;
+}
+
+/*
+ * A logo beside its percent sits on the text's baseline, and being larger it reaches above the
+ * digits, so the percent looks low. Move each logo so the middle of its ink is the middle of the
+ * text's ink on that line. Lines with no text, as in the stacked layout, are left alone.
+ */
+static void centre_logos(Usage* self) {
+  if (self->attributes == NULL) return;
+  pango_layout_set_attributes(self->layout, self->attributes);
+  PangoAttrList* attributes = pango_attr_list_copy(self->attributes);
+  for (GSList* lines = pango_layout_get_lines_readonly(self->layout); lines != NULL; lines = lines->next) {
+    PangoLayoutLine* line = lines->data;
+    int text_top = G_MAXINT, text_bottom = G_MININT;
+    for (GSList* runs = line->runs; runs != NULL; runs = runs->next) {
+      PangoGlyphItem* run = runs->data;
+      PangoRectangle ink;
+      pango_glyph_string_extents(run->glyphs, run->item->analysis.font, &ink, NULL);
+      if (ink.height == 0 || is_logo(run)) continue;
+      text_top = MIN(text_top, ink.y);
+      text_bottom = MAX(text_bottom, ink.y + ink.height);
+    }
+    if (text_top > text_bottom) continue;
+    int text_middle = (text_top + text_bottom) / 2;
+    for (GSList* runs = line->runs; runs != NULL; runs = runs->next) {
+      PangoGlyphItem* run = runs->data;
+      if (!is_logo(run)) continue;
+      PangoRectangle ink;
+      pango_glyph_string_extents(run->glyphs, run->item->analysis.font, &ink, NULL);
+      PangoAttribute* rise = pango_attr_rise_new(ink.y + ink.height / 2 - text_middle);
+      rise->start_index = run->item->offset;
+      rise->end_index = run->item->offset + run->item->length;
+      pango_attr_list_change(attributes, rise);
+    }
+  }
+  pango_layout_set_attributes(self->layout, attributes);
+  pango_attr_list_unref(attributes);
+}
+
 static void measure(Usage* self) {
   PangoRectangle ink, logical;
   pango_layout_get_pixel_extents(self->layout, &ink, &logical);
@@ -109,6 +154,7 @@ static void measure(Usage* self) {
 static void on_style_updated(GtkWidget* lines, gpointer data) {
   Usage* self = data;
   pango_layout_context_changed(self->layout);
+  centre_logos(self);
   measure(self);
 }
 
@@ -157,8 +203,9 @@ static void show(Usage* self, const char* markup, const char* tooltip, char** cl
     return;
   }
   pango_layout_set_text(self->layout, text, -1);
-  pango_layout_set_attributes(self->layout, attributes);
-  pango_attr_list_unref(attributes);
+  if (self->attributes != NULL) pango_attr_list_unref(self->attributes);
+  self->attributes = attributes;
+  centre_logos(self);
   measure(self);
 
   GtkStyleContext* style = gtk_widget_get_style_context(self->box);
@@ -352,6 +399,7 @@ void wbcffi_deinit(void* instance) {
   g_clear_object(&self->closing);
   g_clear_object(&self->widget);
   g_clear_object(&self->layout);
+  g_clear_pointer(&self->attributes, pango_attr_list_unref);
   g_strfreev(self->classes);
   g_free(self->tooltip);
   g_free(self->config.exec);
