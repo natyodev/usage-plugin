@@ -4,8 +4,12 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "bun build src/cli.ts --compile --no-compile-autoload-dotenv --no-compile-autoload-bunfig --outfile dist/usage-plugin && bun scripts/build-icon-font.ts && bun build widget/main.ts --target=browser --format=esm --external 'gi://*' --external cairo --outfile dist/widget.js && bun run build:cffi",
+    "build": "bun run build:bin && bun run build:font && bun run build:widget && bun run build:cffi",
+    "build:bin": "bun build src/cli.ts --compile --no-compile-autoload-dotenv --no-compile-autoload-bunfig --outfile dist/usage-plugin",
+    "build:font": "bun scripts/build-icon-font.ts",
+    "build:widget": "bun build widget/main.ts --target=browser --format=esm --external 'gi://*' --external cairo --outfile dist/widget.js",
     "build:cffi": "mkdir -p dist && gcc -shared -fPIC -O2 -Wall -o dist/usage-plugin-cffi.so cffi/usage-cffi.c $(pkg-config --cflags --libs gtk+-3.0 gio-2.0 json-glib-1.0)",
+    "pack:npm": "bun scripts/pack-npm.ts",
     "check": "tsc --noEmit && bun test --pass-with-no-tests"
   },
   "devDependencies": {

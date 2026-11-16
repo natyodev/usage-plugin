@@ -45,6 +45,7 @@ Hover the module for every window and when it resets.
 - [Providers](#providers)
 - [Add a provider](#add-a-provider)
 - [Uninstall](#uninstall)
+- [Releasing](#releasing)
 - [License](#license)
 
 ## What you get
@@ -60,8 +61,10 @@ Hover the module for every window and when it resets.
 
 | Needed for | What |
 | --- | --- |
-| Everything | Linux and [Waybar](https://github.com/Alexays/Waybar). The hover module is a Waybar CFFI module, tested on Waybar 0.16. |
-| Building | [Bun](https://bun.sh). For the hover module, also `gcc`, `pkg-config` and the GTK 3 and json-glib headers. Without them you still get a click-only module. |
+| Everything | Linux on x64 or arm64, and [Waybar](https://github.com/Alexays/Waybar). The hover module is a Waybar CFFI module, tested on Waybar 0.16. |
+| Installing | [Node.js](https://nodejs.org) 18 or later for `npx`, or [Bun](https://bun.sh) for `bunx`. |
+| The hover module | `gtk3` and `json-glib`. The prebuilt module links to your system's copies and needs glibc 2.35 or later. |
+| Building from a clone | [Bun](https://bun.sh). For the hover module, also `gcc`, `pkg-config` and the GTK 3 and json-glib headers. Without them you still get a click-only module. |
 | The widget | `gjs`, `gtk4`, and `gtk4-layer-shell`, on a Wayland compositor with layer-shell, such as Hyprland, Sway, niri or river. |
 | Readings | [T3 Code](https://t3.codes) running, or a `claude` or `grok` CLI login. |
 
@@ -70,25 +73,26 @@ Hover the module for every window and when it resets.
 On Arch, the packages are:
 
 ```sh
-sudo pacman -S --needed waybar gjs gtk4 gtk4-layer-shell gtk3 json-glib gcc pkgconf
+sudo pacman -S --needed waybar gjs gtk4 gtk4-layer-shell gtk3 json-glib
 ```
+
+Add `gcc pkgconf` only to build from a clone.
 
 ## Install
 
-**1. Get the code.**
+**1. Run the installer.**
 
 ```sh
-git clone https://github.com/natyodev/usage-plugin.git
-cd usage-plugin
+npx usage-plugin install
 ```
 
-**2. Run the installer.**
+Or, with Bun:
 
 ```sh
-./install.sh
+bunx usage-plugin install
 ```
 
-It builds the plugin and installs it for your user only:
+It downloads a prebuilt binary for your CPU and installs it for your user only:
 
 | What | Where |
 | --- | --- |
@@ -96,15 +100,29 @@ It builds the plugin and installs it for your user only:
 | The binary, the widget and the hover module | `~/.local/share/usage-plugin/` |
 | The logo font | `~/.local/share/fonts/usage-plugin-icons.ttf`, then `fc-cache` |
 
-It checks for `gjs` and `gtk4-layer-shell` and warns when either is missing, and it tells you where readings will come from. It never touches `~/.config/waybar/`. Running it again changes nothing unless the code changed, so it also updates an install after `git pull`.
+It checks for `gjs` and `gtk4-layer-shell` and warns when either is missing, and it tells you where readings will come from. It never touches `~/.config/waybar/`. Running it again changes nothing unless a new version came out, so `npx usage-plugin@latest install` also updates an install.
 
 The binary is about 104 MiB, because it carries the Bun runtime.
 
-**3. Paste the module and reload Waybar.** The installer prints a block with your own paths. Add it to your Waybar config, put `"cffi/usage"` in one of your module lists, and reload:
+Any other command runs the installed binary, so `npx usage-plugin module --debug` works too.
+
+**2. Paste the module and reload Waybar.** The installer prints a block with your own paths. Add it to your Waybar config, put `"cffi/usage"` in one of your module lists, and reload:
 
 ```sh
 pkill -SIGUSR2 waybar
 ```
+
+### Install from a clone
+
+To build it yourself, or on a CPU without a prebuilt binary, clone the repo and run its installer. It builds with Bun, then installs and prints the same block as `npx`:
+
+```sh
+git clone https://github.com/natyodev/usage-plugin.git
+cd usage-plugin
+./install.sh
+```
+
+Run `./install.sh` again after `git pull` to update.
 
 ## Add it to your bar
 
@@ -394,12 +412,31 @@ A provider that T3 Code reports needs only a logo and a registry row. Reading it
 ## Uninstall
 
 ```sh
-rm -r ~/.local/share/usage-plugin ~/.local/bin/usage-plugin ~/.local/share/fonts/usage-plugin-icons.ttf
-rm -rf ~/.config/usage-plugin
-fc-cache -f ~/.local/share/fonts
+npx usage-plugin uninstall
+```
+
+It removes exactly what `install` placed and keeps your config in `~/.config/usage-plugin/`. To remove that too:
+
+```sh
+rm -r ~/.config/usage-plugin
 ```
 
 Then remove the module from your Waybar config and reload Waybar. If you used T3 Code, any plugin session left in T3's list of connected clients expires within the hour.
+
+## Releasing
+
+Maintainers publish to npm from GitHub Actions. The `release` workflow builds `usage-plugin-linux-x64` and `usage-plugin-linux-arm64` on Ubuntu 22.04, packs and smoke-tests them, and publishes them before `usage-plugin`.
+
+1. Create an npm access token that can publish, and add it to the repo's Actions secrets as `NPM_TOKEN`.
+2. Run the `release` workflow by hand from the Actions tab. That is a dry run: it builds, packs and tests everything and publishes nothing.
+3. Set `version` in `package.json`, merge it, then tag that commit and push the tag:
+
+   ```sh
+   git tag v0.1.0
+   git push origin v0.1.0
+   ```
+
+The workflow stops if the tag does not match `package.json`. It skips any package already published at that version, so a failed run can be re-run.
 
 ## License
 

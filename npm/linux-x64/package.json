@@ -1,0 +1,12 @@
+{
+  "name": "usage-plugin-linux-x64",
+  "version": "0.1.0",
+  "description": "The Linux x64 binary and Waybar module for usage-plugin. Install usage-plugin instead.",
+  "keywords": ["waybar", "hyprland", "t3code", "claude", "usage"],
+  "license": "MIT",
+  "repository": { "type": "git", "url": "git+https://github.com/natyodev/usage-plugin.git" },
+  "homepage": "https://github.com/natyodev/usage-plugin#readme",
+  "os": ["linux"],
+  "cpu": ["x64"],
+  "files": ["usage-plugin", "usage-plugin-cffi.so"]
+}

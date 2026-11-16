@@ -8,12 +8,11 @@ const ROOT = join(import.meta.dir, "..");
 const SHIPPED_PATH = "dist/usage-plugin";
 const BUILD_TIMEOUT_MS = 120_000;
 
-describe("the binary that `bun run build` compiles", () => {
+describe("the binary that `bun run build:bin` compiles", () => {
   const binary = join(tempDir(), "usage-plugin");
 
   beforeAll(() => {
-    const [compile = ""] = scripts.build.split(" && ");
-    const [bun, ...args] = compile.replace(SHIPPED_PATH, binary).split(" ");
+    const [bun, ...args] = scripts["build:bin"].replace(SHIPPED_PATH, binary).split(" ");
     if (bun !== "bun" || !args.includes(binary)) throw new Error(`the build script no longer compiles ${SHIPPED_PATH}`);
 
     const built = Bun.spawnSync([process.execPath, ...args], { cwd: ROOT, stdout: "pipe", stderr: "pipe" });
