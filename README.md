@@ -425,15 +425,22 @@ Then remove the module from your Waybar config and reload Waybar. If you used T3
 
 ## Releasing
 
-Maintainers publish to npm from GitHub Actions. The `release` workflow builds `usage-plugin-linux-x64` and `usage-plugin-linux-arm64` on Ubuntu 22.04, packs and smoke-tests them, and publishes them before `usage-plugin`.
+Maintainers publish to npm from GitHub Actions with staged publishing. The `release` workflow builds `usage-plugin-linux-x64` and `usage-plugin-linux-arm64` on Ubuntu 22.04, packs and smoke-tests them, and stages them before `usage-plugin`. Nothing goes live until a maintainer approves it with 2FA.
 
-1. Create an npm access token that can publish, and add it to the repo's Actions secrets as `NPM_TOKEN`.
+1. Create a granular npm token with **Read and write (stage only)** on all packages, and add it to the repo's Actions secrets as `NPM_TOKEN`. Write tokens last at most 90 days.
 2. Run the `release` workflow by hand from the Actions tab. That is a dry run: it builds, packs and tests everything and publishes nothing.
 3. Set `version` in `package.json`, merge it, then tag that commit and push the tag:
 
    ```sh
    git tag v0.1.0
    git push origin v0.1.0
+   ```
+
+4. Approve the staged versions, platform packages first:
+
+   ```sh
+   npm stage list usage-plugin-linux-x64      # likewise usage-plugin-linux-arm64, usage-plugin
+   npm stage approve <stage-id> --otp <code>
    ```
 
 The workflow stops if the tag does not match `package.json`. It skips any package already published at that version, so a failed run can be re-run.
