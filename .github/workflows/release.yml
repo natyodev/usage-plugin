@@ -67,10 +67,12 @@ jobs:
         with:
           pattern: packs-*
           path: packs
-      - name: Pack without publishing
+      - run: npm install -g npm@latest
+      - name: Stage without publishing
         run: |
           for tarball in packs/packs-x64/usage-plugin-linux-x64-*.tgz packs/packs-arm64/usage-plugin-linux-arm64-*.tgz packs/packs-x64/usage-plugin-[0-9]*.tgz; do
-            npm publish "$tarball" --access public --dry-run
+            dir=$(mktemp -d) && tar -xzf "$tarball" -C "$dir"
+            (cd "$dir/package" && npm stage publish --access public --dry-run)
           done
 
   publish:
@@ -89,7 +91,10 @@ jobs:
         with:
           pattern: packs-*
           path: packs
-      - name: Publish the platform packages, then usage-plugin
+      # Staging needs npm 11.15 or later. A maintainer then approves each staged version with 2FA:
+      # npm stage list <name>, then npm stage approve <stage-id>, platform packages before usage-plugin.
+      - run: npm install -g npm@latest
+      - name: Stage the platform packages, then usage-plugin
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
@@ -99,5 +104,6 @@ jobs:
               echo "$spec is already published"
               continue
             fi
-            npm publish "$tarball" --access public --provenance
+            dir=$(mktemp -d) && tar -xzf "$tarball" -C "$dir"
+            (cd "$dir/package" && npm stage publish --access public --provenance)
           done
