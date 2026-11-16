@@ -80,17 +80,17 @@ Add `gcc pkgconf` only to build from a clone.
 
 ## Install
 
-**1. Run the installer.**
+**1. Run the installer.** Pick whichever tool you already have:
 
-```sh
-npx usage-plugin install
-```
+| With | Install or update | Uninstall |
+| --- | --- | --- |
+| npm | `npx usage-plugin@latest install` | `npx usage-plugin uninstall` |
+| Bun | `bunx usage-plugin@latest install` | `bunx usage-plugin uninstall` |
+| A clone | `./install.sh` (see [Install from a clone](#install-from-a-clone)) | `npx usage-plugin uninstall` |
 
-Or, with Bun:
+There is no need for a global `npm install -g`: the installer puts the `usage-plugin` command in `~/.local/bin` itself.
 
-```sh
-bunx usage-plugin install
-```
+`@latest` makes `npx` and `bunx` fetch the newest release instead of a cached one. Prebuilt binaries cover Linux on x86-64 and arm64 with glibc 2.35 or later. Anywhere else, install from a clone.
 
 It downloads a prebuilt binary for your CPU and installs it for your user only:
 
