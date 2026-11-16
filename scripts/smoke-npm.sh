@@ -24,7 +24,8 @@ esac
 cli="$work/prefix/node_modules/.bin/usage-plugin"
 
 run() { HOME="$home" XDG_DATA_HOME="$data" XDG_CONFIG_HOME="$home/.config" "$cli" "$@"; }
-snapshot() { find "$home/.local" \( -type f -o -type l \) -printf '%p %m %T@ %l\n' 2>/dev/null | sort; }
+# fc-cache on some distros writes a .uuid into the fonts folder. It is fontconfig's, not ours.
+snapshot() { find "$home/.local" \( -type f -o -type l \) ! -name .uuid -printf '%p %m %T@ %l\n' 2>/dev/null | sort; }
 
 run install > "$work/first.txt"
 grep -q '^Installed usage-plugin ' "$work/first.txt" || fail "first install did not install: $(cat "$work/first.txt")"
