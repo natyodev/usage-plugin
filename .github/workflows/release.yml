@@ -1,0 +1,91 @@
+name: release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - arch: x64
+            runner: ubuntu-22.04
+          - arch: arm64
+            runner: ubuntu-22.04-arm
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check the tag matches package.json
+        if: github.ref_type == 'tag'
+        run: |
+          version=$(jq -r .version package.json)
+          [ "v$version" = "$GITHUB_REF_NAME" ] || { echo "::error::tag $GITHUB_REF_NAME does not match package.json version $version"; exit 1; }
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: package.json
+      - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends libgtk-3-dev libjson-glib-dev
+      - run: bun install --frozen-lockfile
+      - run: bun run check
+      - run: bun run build:bin --target=bun-linux-${{ matrix.arch }}
+      - run: bun run build:font
+      - run: bun run build:widget
+      - run: bun run build:cffi
+      - run: bun scripts/pack-npm.ts ${{ matrix.arch }} packs
+      - run: sh scripts/smoke-npm.sh packs npm
+      - uses: actions/upload-artifact@v4
+        with:
+          name: packs-${{ matrix.arch }}
+          path: packs/*.tgz
+          if-no-files-found: error
+
+  dry-run:
+    needs: build
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: packs-*
+          path: packs
+      - name: Pack without publishing
+        run: |
+          for tarball in packs/packs-x64/usage-plugin-linux-x64-*.tgz packs/packs-arm64/usage-plugin-linux-arm64-*.tgz packs/packs-x64/usage-plugin-[0-9]*.tgz; do
+            npm publish "$tarball" --access public --dry-run
+          done
+
+  publish:
+    needs: build
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: packs-*
+          path: packs
+      - name: Publish the platform packages, then usage-plugin
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          for tarball in packs/packs-x64/usage-plugin-linux-x64-*.tgz packs/packs-arm64/usage-plugin-linux-arm64-*.tgz packs/packs-x64/usage-plugin-[0-9]*.tgz; do
+            spec=$(tar -xzOf "$tarball" package/package.json | jq -r '.name + "@" + .version')
+            if npm view "$spec" version >/dev/null 2>&1; then
+              echo "$spec is already published"
+              continue
+            fi
+            npm publish "$tarball" --access public --provenance
+          done

@@ -1,13 +1,17 @@
 import { expect, test } from "bun:test";
 import { chmodSync, copyFileSync, lstatSync, mkdirSync, readFileSync, readdirSync, readlinkSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 import { tempDir } from "./support.ts";
 
-const INSTALL = join(import.meta.dir, "..", "install.sh");
+const ROOT = join(import.meta.dir, "..");
+const SHIPPED = ["install.sh", "npm/usage-plugin/package.json", "npm/usage-plugin/bin/usage-plugin.js"];
 
 function builtCheckout(withHoverModule: boolean): string {
   const repo = tempDir();
-  copyFileSync(INSTALL, join(repo, "install.sh"));
+  for (const file of SHIPPED) {
+    mkdirSync(dirname(join(repo, file)), { recursive: true });
+    copyFileSync(join(ROOT, file), join(repo, file));
+  }
   mkdirSync(join(repo, "dist"));
   writeFileSync(join(repo, "dist", "usage-plugin"), "#!/bin/sh\necho 0.1.0\n");
   chmodSync(join(repo, "dist", "usage-plugin"), 0o755);
@@ -75,7 +79,7 @@ test("warns about a missing gjs and still installs the module", () => {
   const repo = builtCheckout(true);
   const home = tempDir();
   const bin = tempDir();
-  for (const tool of ["sh", "sed", "grep", "find", "cmp", "cp", "mv", "chmod", "mkdir", "ln", "readlink", "dirname", "tr", "head", "cat"]) {
+  for (const tool of ["sh", "find", "head", "dirname", "node"]) {
     const found = Bun.which(tool, { PATH: process.env.PATH ?? "" });
     if (found !== null) Bun.spawnSync(["ln", "-s", found, join(bin, tool)]);
   }
