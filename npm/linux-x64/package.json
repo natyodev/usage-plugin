@@ -1,6 +1,6 @@
 {
   "name": "usage-plugin-linux-x64",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "The Linux x64 binary and Waybar module for usage-plugin. Install usage-plugin instead.",
   "keywords": ["waybar", "hyprland", "t3code", "claude", "usage"],
   "license": "MIT",

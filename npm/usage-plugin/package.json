@@ -1,6 +1,6 @@
 {
   "name": "usage-plugin",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "AI subscription usage in your Waybar: Claude, Codex, Grok and more, read from T3 Code or your CLI logins.",
   "keywords": ["waybar", "hyprland", "t3code", "claude", "usage"],
   "license": "MIT",
@@ -11,7 +11,7 @@
   "files": ["bin", "widget.js", "usage-plugin-icons.ttf"],
   "engines": { "node": ">=18" },
   "optionalDependencies": {
-    "usage-plugin-linux-arm64": "0.1.0",
-    "usage-plugin-linux-x64": "0.1.0"
+    "usage-plugin-linux-arm64": "0.1.1",
+    "usage-plugin-linux-x64": "0.1.1"
   }
 }
